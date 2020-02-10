@@ -9,4 +9,4 @@ out
 gen
 
 #Secret data
-token.txt
+config.py
