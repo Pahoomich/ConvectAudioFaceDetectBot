@@ -28,7 +28,7 @@ class DBRepository:
         select_query = "SELECT * FROM voices WHERE voices.user_id = %s"
         with self.connection:
             self.cursor.execute(select_query, (uid,))
-            return len(self.cursor.fetchall()) is not None
+            return len(self.cursor.fetchall())
 
     def save_voice(self, record_to_insert):
         insert_query = "INSERT INTO voices (path_to_voice_message, user_id) VALUES (%s,%s)"
