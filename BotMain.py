@@ -16,7 +16,10 @@ def start_massege(message):
         bot.send_message(message.chat.id, 'Привет, мой пользователь')
     elif message.text.lower() == '/help':
         bot.send_message(message.chat.id,
-                         'Я умею следующее: \n 1. Сохранять аудиосообщения \n 2. Конвектировать аудио \n 3. Искать лица на фото')
+                         'Я умею следующее: \n ' +
+                         '1. Отправь мне голосовое сообщение и я его сохраню на диск и оставлю запись в БД \n' +
+                         '2. Сконвертирую его в wav формат и поменяю частоту дискретизации на 16kHz \n' +
+                         '3. Отправь мне фото с лицо и я его сохраню на диск')
 
 
 @bot.message_handler(content_types=['voice'])
@@ -76,9 +79,6 @@ def find_face_and_save(message):
     # download photo by bytes
     download_file = bot.download_file(photo_file_info.file_path)
 
-    # read bytes
-    photo_bytes = BytesIO(download_file)
-
     # create numpy array from bytes and create image
     nparr = np.frombuffer(download_file, np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -98,9 +98,9 @@ def find_face_and_save(message):
             first_detection = True
             break
 
-            # save image
+    # save image
     if (first_detection):
-        cv2.imwrite(os.path.join(face_path, '{}_face_{}.png'.format(str(user_id), face_num)),image)
+        cv2.imwrite(os.path.join(face_path, '{}_face_{}.png'.format(str(user_id), face_num)), image)
         bot.send_message(message.chat.id, 'Я сохранил твою мордочку')
     else:
         bot.send_message(message.chat.id, 'Увы, я не нашел лица')
